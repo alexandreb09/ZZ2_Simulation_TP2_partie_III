@@ -1,9 +1,8 @@
 #include "Client.h"
 
-int Client::compteur = -1;
+int Client::compteur = 0;
 
-Client::Client() :id(compteur++), date_entree_syst(0), date_sortie_syst(-1), nb_machines_vues(0) {
-
+Client::Client() :id(compteur), date_entree_syst(0), date_sortie_syst(-1), nb_machines_vues(0) {
 }
 
 Client::Client(int des) : id(compteur++), date_entree_syst(des), date_sortie_syst(-1), nb_machines_vues(0) {}
