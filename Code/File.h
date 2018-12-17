@@ -13,7 +13,6 @@ class File {
 
 	int date_event_prec;				// Stats
 	int duree_occupation;				// Stats
-	int DPE;							// QT 2
 
 	public:
 		File();
@@ -31,9 +30,4 @@ class File {
 		int getTaille();
 
 		void MAJDuree_Occupation(int date_courante);
-
-		int getDPE();
-		void setDPE(int n_dpe);
-		void MAJDPE();
-		Client getSommet();
 };

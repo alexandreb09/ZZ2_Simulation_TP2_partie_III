@@ -7,6 +7,10 @@ class Machine {
 	int Etat;
 	int date_prochain_event;
 	int duree_traitement;
+
+	int date_entree_etat_bloque;			// Stats
+	int duree_etat_bloquee;					// Stats
+
 	Client client_present;
 
 	public:
@@ -24,4 +28,8 @@ class Machine {
 
 		const Client getClient_present();
 		void setClient_present(Client n_cl);
+
+		int getDuree_etat_bloquee();
+		void MAJ_duree_etat_bloquee(int date_courante);
+		void setDate_entree_etat_bloque(int detb);
 };

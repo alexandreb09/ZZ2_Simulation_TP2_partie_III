@@ -51,6 +51,8 @@ namespace Code {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::TextBox^  textBox6;
 	private: System::Windows::Forms::Label^  label6;
+	private: System::Windows::Forms::DataVisualization::Charting::Chart^  Graphique;
+
 	protected:
 
 	private:
@@ -67,6 +69,11 @@ namespace Code {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(form_main::typeid));
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^  chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^  legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Title^  title1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
@@ -82,7 +89,9 @@ namespace Code {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->Graphique = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->Graphique))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -183,6 +192,7 @@ namespace Code {
 			this->pictureBox1->Size = System::Drawing::Size(464, 153);
 			this->pictureBox1->TabIndex = 11;
 			this->pictureBox1->TabStop = false;
+			this->pictureBox1->Click += gcnew System::EventHandler(this, &form_main::pictureBox1_Click);
 			// 
 			// button1
 			// 
@@ -210,11 +220,45 @@ namespace Code {
 			this->label6->TabIndex = 13;
 			this->label6->Text = L"Durée entre 2 clients (source 2) :";
 			// 
+			// Graphique
+			// 
+			chartArea1->Name = L"ChartArea1";
+			this->Graphique->ChartAreas->Add(chartArea1);
+			legend1->Alignment = System::Drawing::StringAlignment::Center;
+			legend1->Docking = System::Windows::Forms::DataVisualization::Charting::Docking::Bottom;
+			legend1->Name = L"Legend1";
+			this->Graphique->Legends->Add(legend1);
+			this->Graphique->Location = System::Drawing::Point(882, 28);
+			this->Graphique->Name = L"Graphique";
+			this->Graphique->Palette = System::Windows::Forms::DataVisualization::Charting::ChartColorPalette::None;
+			series1->ChartArea = L"ChartArea1";
+			series1->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series1->Legend = L"Legend1";
+			series1->LegendText = L"Machine 1";
+			series1->Name = L"Series1";
+			series2->ChartArea = L"ChartArea1";
+			series2->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
+			series2->Legend = L"Legend1";
+			series2->LegendText = L"Machine 2";
+			series2->Name = L"Series2";
+			this->Graphique->Series->Add(series1);
+			this->Graphique->Series->Add(series2);
+			this->Graphique->Size = System::Drawing::Size(357, 341);
+			this->Graphique->TabIndex = 15;
+			this->Graphique->Text = L"chart1";
+			title1->Font = (gcnew System::Drawing::Font(L"Calibri", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			title1->Name = L"Duree moyenne par machine";
+			title1->Text = L"Duree moyenne par machine";
+			this->Graphique->Titles->Add(title1);
+			this->Graphique->Click += gcnew System::EventHandler(this, &form_main::Graphique_Click);
+			// 
 			// form_main
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(818, 425);
+			this->ClientSize = System::Drawing::Size(1288, 425);
+			this->Controls->Add(this->Graphique);
 			this->Controls->Add(this->textBox6);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
@@ -231,8 +275,9 @@ namespace Code {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Name = L"form_main";
-			this->Text = L"form_main";
+			this->Text = L"Simulation";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->Graphique))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -244,6 +289,8 @@ namespace Code {
 	}
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->richTextBox1->Clear();
+	this->Graphique->Series[0]->Points->Clear();
+	this->Graphique->Series[1]->Points->Clear();
 
 
 	System::String^ chaineBTN1 = this->textBox1->Text;
@@ -261,8 +308,12 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 		int duree_traitement_cl_m2 = System::Convert::ToInt32(chaineBTN5);
 		int duree_assemblage = System::Convert::ToInt32(chaineBTN6);
 
-		simuler(duree_sim, duree_entre_2_cl_src1, duree_entre_2_cl_src2, duree_traitement_cl_m1, duree_traitement_cl_m2, duree_assemblage, richTextBox1);
+		simuler(duree_sim, duree_entre_2_cl_src1, duree_entre_2_cl_src2, duree_traitement_cl_m1, duree_traitement_cl_m2, duree_assemblage, richTextBox1, Graphique);
 	}
+}
+private: System::Void pictureBox1_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void Graphique_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }
